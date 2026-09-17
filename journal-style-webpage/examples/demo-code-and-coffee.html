@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- 示例页 · 主题：代码与咖啡 —— 用 journal-style-webpage 风格系统原创生成 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阿豆的深夜手帐 · 代码与咖啡</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Patrick+Hand&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF6EC;
+    --paper-light: #FFFDF6;
+    --ink: #4A3B32;
+    --ink-soft: #8A7A6D;
+    --line: #D9CDBB;
+    --accent-1: #E2795F; /* 番茄红：咖啡渍与热爱 */
+    --accent-2: #EFBE4F; /* 芥末黄：荧光笔 */
+    --hand: 'ZCOOL KuaiLe', 'Kaiti', 'STKaiti', cursive;
+    --note: 'Patrick Hand', 'Kaiti', cursive;
+    --type: 'Courier Prime', 'Kaiti', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    background-image: radial-gradient(rgba(74,59,50,0.045) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--ink); font-family: var(--note); font-size: 17px; line-height: 1.9;
+    display: flex; flex-direction: column; align-items: center; padding: 0 20px 96px;
+  }
+  main { max-width: 760px; width: 100%; }
+  .rings { display: flex; justify-content: center; gap: 26px; padding: 34px 0 26px; }
+  .ring { width: 14px; height: 44px; border-radius: 8px; border: 4px solid #b9b3ab; border-top-color: #d8d4cd; border-bottom-color: #928c83; background: linear-gradient(180deg, #e8e5df, #c4beb5); box-shadow: 0 2px 3px rgba(74,59,50,0.25); }
+  .leaf { opacity: 0; transform: translateY(10px) rotate(var(--tilt, 0deg)); animation: settle .55s ease-out forwards; animation-delay: var(--delay, 0s); }
+  @keyframes settle { to { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)); } }
+  .page { background: var(--paper-light); border-radius: 6px; box-shadow: 0 2px 8px rgba(74,59,50,0.08); padding: 30px 30px 26px; margin: 56px 0; transform: rotate(var(--tilt, 0deg)); position: relative; transition: transform .25s ease, box-shadow .25s ease; }
+  .page:hover { transform: rotate(var(--tilt, 0deg)) translateY(-3px); box-shadow: 0 6px 16px rgba(74,59,50,0.12); }
+  h1 { font-family: var(--hand); font-size: 52px; font-weight: 400; letter-spacing: 2px; }
+  h2 { font-family: var(--hand); font-size: 27px; font-weight: 400; margin-bottom: 12px; display: inline-block; }
+  .hl { background: linear-gradient(104deg, transparent 2%, rgba(239,190,79,0.45) 6%, rgba(239,190,79,0.45) 94%, transparent 98%); padding: 0 4px; }
+  .wavy { display: block; width: 150px; height: 10px; margin-top: 2px; }
+  .wavy path { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+  .sticker { display: inline-flex; align-items: center; justify-content: center; font-size: 40px; width: 64px; height: 64px; background: #fff; border: 4px solid #fff; border-radius: 50% 46% 52% 48%; box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: rotate(var(--tilt, -2deg)); transition: transform .25s ease; position: absolute; }
+  .sticker:hover { transform: rotate(calc(var(--tilt, -2deg) * -2)) translateY(-3px); }
+  .corner-tr { top: -22px; right: -14px; }
+  .corner-bl { bottom: -18px; left: -14px; }
+  .tape { position: absolute; width: 104px; height: 26px; background: repeating-linear-gradient(45deg, var(--accent-1) 0 8px, rgba(255,255,255,0.25) 8px 12px); opacity: 0.75; top: -13px; left: 38px; transform: rotate(var(--tilt, -2deg)); clip-path: polygon(0 4%, 3% 0, 97% 2%, 100% 8%, 99% 96%, 95% 100%, 4% 98%, 1% 92%); }
+  .tape.alt { background: repeating-linear-gradient(-45deg, var(--accent-2) 0 8px, rgba(255,255,255,0.3) 8px 12px); left: auto; right: 52px; transform: rotate(var(--tilt, 1.5deg)); }
+  .polaroid { background: #fff; padding: 10px 10px 34px; box-shadow: 0 3px 8px rgba(74,59,50,0.15); transform: rotate(var(--tilt, -2deg)); max-width: 300px; display: inline-block; }
+  .polaroid .ph { height: 150px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-size: 56px; }
+  .polaroid figcaption { text-align: center; font-size: 15px; color: var(--ink-soft); padding-top: 8px; }
+  .note { background: #FBF3D5; padding: 18px 20px 16px; max-width: 240px; box-shadow: 0 3px 7px rgba(74,59,50,0.12); transform: rotate(var(--tilt, 1.5deg)); position: relative; font-size: 16px; }
+  .note::before { content: ''; position: absolute; top: -11px; left: 50%; width: 72px; height: 22px; transform: translateX(-50%) rotate(-1deg); background: repeating-linear-gradient(45deg, var(--accent-1) 0 6px, rgba(255,255,255,0.3) 6px 9px); opacity: .75; clip-path: polygon(0 4%, 3% 0, 97% 2%, 100% 8%, 99% 96%, 95% 100%, 4% 98%, 1% 92%); }
+  p + p { margin-top: 14px; }
+  .meta { font-family: var(--type); font-size: 13px; color: var(--ink-soft); letter-spacing: 1px; }
+  ul { list-style: none; }
+  ul li { padding-left: 26px; position: relative; margin: 8px 0; }
+  ul li::before { content: '✦'; position: absolute; left: 2px; color: var(--accent-1); }
+  .doodle { position: absolute; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; }
+  .breath { text-align: center; padding: 72px 0; }
+  .breath p { font-family: var(--hand); font-size: 22px; color: var(--ink-soft); }
+  footer { text-align: center; margin-top: 64px; color: var(--ink-soft); }
+  footer .stamp { font-family: var(--hand); font-size: 20px; color: var(--accent-1); border: 2px dashed var(--accent-1); border-radius: 8px; display: inline-block; padding: 6px 18px; transform: rotate(-2deg); }
+  @media (max-width: 640px) { h1 { font-size: 38px; } .page { padding: 24px 20px; } }
+</style>
+</head>
+<body>
+
+<div class="rings" aria-hidden="true">
+  <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+  <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+</div>
+
+<main>
+  <header class="leaf" style="--tilt:-0.6deg; --delay:.05s; text-align:center; padding-top:8px;">
+    <h1>阿豆的<span class="hl">深夜手帐</span></h1>
+    <svg class="wavy" viewBox="0 0 150 10" style="margin:0 auto;"><path d="M2 6 Q 14 1, 26 6 T 50 6 T 74 6 T 98 6 T 122 6 T 146 5"/></svg>
+    <p class="meta" style="margin-top:10px;">COFFEE IN, CODE OUT · EST. 2026</p>
+  </header>
+
+  <section class="page leaf" style="--tilt:0.8deg; --delay:.15s;">
+    <div class="tape"></div>
+    <span class="sticker corner-tr" style="--tilt:2deg;">☕</span>
+    <h2>写代码的人</h2>
+    <p>白天写代码，晚上也想写点别的。这个本子用来放那些不属于 git 记录的东西——调试到凌晨的怨念、突然跑通时的快乐，和杯底那一圈洗不掉的咖啡渍。</p>
+    <p>信条只有一条：<span class="hl">先跑起来，再跑好看。</span></p>
+    <span class="meta">written at 01:47, third refill</span>
+    <span class="sticker corner-bl" style="--tilt:-2.5deg;">💻</span>
+  </section>
+
+  <section class="page leaf" style="--tilt:-1.2deg; --delay:.25s;">
+    <div class="tape alt"></div>
+    <h2>本周的<span class="hl">小</span>成就</h2>
+    <ul>
+      <li>终于搞懂了一个报错——原来是自己三天前写的</li>
+      <li>给旧项目补了测试，覆盖率涨了 12%</li>
+      <li>发现一家 11 点后还开的咖啡店，救命</li>
+    </ul>
+    <div style="display:flex; gap:32px; flex-wrap:wrap; margin-top:22px; justify-content:center;">
+      <figure class="polaroid" style="--tilt:-2deg;">
+        <div class="ph">🐛</div>
+        <figcaption>本周最佳：一只被抓到的 bug</figcaption>
+      </figure>
+      <div class="note" style="--tilt:1.8deg; align-self:center;">
+        今日顿悟：bug 不是敌人，是还没读过的需求文档。
+      </div>
+    </div>
+    <svg class="doodle" style="right:28px; bottom:-26px; width:70px; height:40px;" viewBox="0 0 70 40"><path d="M4 6 C 24 4, 44 12, 58 28 M58 28 l-12 -3 M58 28 l2 -12"/></svg>
+  </section>
+
+  <div class="breath leaf" style="--delay:.35s;">
+    <svg width="46" height="46" viewBox="0 0 46 46" style="stroke:var(--ink); fill:none; stroke-width:2; stroke-linecap:round; transform:rotate(-8deg);"><path d="M23 5 L26 18 L39 20 L28 27 L31 40 L23 31 L14 39 L18 26 L7 21 L20 18 Z"/></svg>
+    <p>咖啡凉了，代码热着，就够了。</p>
+  </div>
+
+  <section class="page leaf" style="--tilt:1.4deg; --delay:.4s;">
+    <div class="tape"></div>
+    <span class="sticker corner-tr" style="--tilt:-1.8deg;">🌙</span>
+    <h2>下一页想写</h2>
+    <p>想学的东西排着队：把拖延已久的个人项目捡回来、试试新的框架、以及认真回答那个终极问题——今天到底喝了几杯。</p>
+    <span class="meta">to be continued…</span>
+  </section>
+
+  <footer class="leaf" style="--delay:.5s;">
+    <div class="stamp">谢谢翻到这一页 ✿</div>
+    <p class="meta" style="margin-top:14px;">© 2026 阿豆 · hand-bound with love</p>
+  </footer>
+</main>
+</body>
+</html>

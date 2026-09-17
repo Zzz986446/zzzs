@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<!-- 手帐风个人网页模板 · journal-style-webpage skill -->
+<!-- 用法：复制本文件，替换 <title>、文案、贴纸意象、强调色（见 style-guide 第 1 节）。
+     保留全部 CSS token 与"微旋转"规律；贴纸/涂鸦按主题重新挑选，不要沿用占位内容。 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的手帐主页</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Patrick+Hand&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+  /* ===== 设计 token：骨架固定，勿改底色/墨色 ===== */
+  :root {
+    --paper: #FAF6EC;        /* 纸底色 */
+    --paper-light: #FFFDF6;  /* 卡片/内页 */
+    --ink: #4A3B32;          /* 墨色正文 */
+    --ink-soft: #8A7A6D;     /* 浅墨批注 */
+    --line: #D9CDBB;         /* 虚线线条 */
+    --accent-1: #9DB89A;     /* 强调色 1：按主题更换 */
+    --accent-2: #EFBE4F;     /* 强调色 2（荧光笔/胶带）：按主题更换 */
+    --hand: 'ZCOOL KuaiLe', 'Kaiti', 'STKaiti', cursive;
+    --note: 'Patrick Hand', 'Kaiti', cursive;
+    --type: 'Courier Prime', 'Kaiti', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    background-image: radial-gradient(rgba(74,59,50,0.045) 1px, transparent 1px);
+    background-size: 22px 22px; /* 极淡圆点格 */
+    color: var(--ink);
+    font-family: var(--note);
+    font-size: 17px;
+    line-height: 1.9;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0 20px 96px;
+  }
+  main { max-width: 760px; width: 100%; }
+
+  /* ===== 活页环：整页"这是本子"的锚点 ===== */
+  .rings { display: flex; justify-content: center; gap: 26px; padding: 34px 0 26px; }
+  .ring {
+    width: 14px; height: 44px; border-radius: 8px;
+    border: 4px solid #b9b3ab;
+    border-top-color: #d8d4cd; border-bottom-color: #928c83;
+    background: linear-gradient(180deg, #e8e5df, #c4beb5);
+    box-shadow: 0 2px 3px rgba(74,59,50,0.25);
+  }
+
+  /* ===== 进场动效：纸页被风碰了一下 ===== */
+  .leaf { opacity: 0; transform: translateY(10px) rotate(var(--tilt, 0deg)); animation: settle .55s ease-out forwards; animation-delay: var(--delay, 0s); }
+  @keyframes settle { to { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)); } }
+
+  /* ===== 内页卡片 ===== */
+  .page {
+    background: var(--paper-light);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(74,59,50,0.08);
+    padding: 30px 30px 26px;
+    margin: 56px 0;
+    transform: rotate(var(--tilt, 0deg));
+    position: relative;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .page:hover { transform: rotate(var(--tilt, 0deg)) translateY(-3px); box-shadow: 0 6px 16px rgba(74,59,50,0.12); }
+
+  h1 { font-family: var(--hand); font-size: 52px; font-weight: 400; letter-spacing: 2px; }
+  h2 { font-family: var(--hand); font-size: 27px; font-weight: 400; margin-bottom: 12px; display: inline-block; }
+
+  /* 荧光笔高亮 */
+  .hl { background: linear-gradient(104deg, transparent 2%, rgba(239,190,79,0.45) 6%, rgba(239,190,79,0.45) 94%, transparent 98%); padding: 0 4px; }
+
+  /* 波浪手绘下划线（内联 SVG 用法：<svg class="wavy">…） */
+  .wavy { display: block; width: 150px; height: 10px; margin-top: 2px; }
+  .wavy path { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+
+  /* ===== 贴纸：emoji + 白色介刀边 ===== */
+  .sticker {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 40px; width: 64px; height: 64px;
+    background: #fff; border: 4px solid #fff; border-radius: 50% 46% 52% 48%;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    transform: rotate(var(--tilt, -2deg));
+    transition: transform .25s ease;
+    position: absolute;
+  }
+  .sticker:hover { transform: rotate(calc(var(--tilt, -2deg) * -2)) translateY(-3px); }
+  .corner-tr { top: -22px; right: -14px; }
+  .corner-bl { bottom: -18px; left: -14px; }
+
+  /* ===== 和纸胶带 ===== */
+  .tape {
+    position: absolute; width: 104px; height: 26px;
+    background: repeating-linear-gradient(45deg, var(--accent-1) 0 8px, rgba(255,255,255,0.25) 8px 12px);
+    opacity: 0.75; top: -13px; left: 38px;
+    transform: rotate(var(--tilt, -2deg));
+    clip-path: polygon(0 4%, 3% 0, 97% 2%, 100% 8%, 99% 96%, 95% 100%, 4% 98%, 1% 92%); /* 锯齿撕口 */
+  }
+  .tape.alt { background: repeating-linear-gradient(-45deg, var(--accent-2) 0 8px, rgba(255,255,255,0.3) 8px 12px); left: auto; right: 52px; transform: rotate(var(--tilt, 1.5deg)); }
+
+  /* ===== 拍立得 ===== */
+  .polaroid {
+    background: #fff; padding: 10px 10px 34px;
+    box-shadow: 0 3px 8px rgba(74,59,50,0.15);
+    transform: rotate(var(--tilt, -2deg));
+    max-width: 300px; display: inline-block;
+  }
+  .polaroid .ph { height: 150px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-size: 56px; }
+  .polaroid figcaption { text-align: center; font-size: 15px; color: var(--ink-soft); padding-top: 8px; }
+
+  /* ===== 便利贴 ===== */
+  .note {
+    background: #FBF3D5; padding: 18px 20px 16px; max-width: 240px;
+    box-shadow: 0 3px 7px rgba(74,59,50,0.12);
+    transform: rotate(var(--tilt, 1.5deg)); position: relative;
+    font-size: 16px;
+  }
+  .note::before { content: ''; position: absolute; top: -11px; left: 50%; width: 72px; height: 22px; transform: translateX(-50%) rotate(-1deg); background: repeating-linear-gradient(45deg, var(--accent-1) 0 6px, rgba(255,255,255,0.3) 6px 9px); opacity: .75; clip-path: polygon(0 4%, 3% 0, 97% 2%, 100% 8%, 99% 96%, 95% 100%, 4% 98%, 1% 92%); }
+
+  /* ===== 手帐排版细节 ===== */
+  p + p { margin-top: 14px; }
+  .meta { font-family: var(--type); font-size: 13px; color: var(--ink-soft); letter-spacing: 1px; }
+  ul { list-style: none; }
+  ul li { padding-left: 26px; position: relative; margin: 8px 0; }
+  ul li::before { content: '✦'; position: absolute; left: 2px; color: var(--accent-1); }
+  .doodle { position: absolute; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; }
+
+  /* 呼吸区：只留一句话和小涂鸦 */
+  .breath { text-align: center; padding: 72px 0; }
+  .breath p { font-family: var(--hand); font-size: 22px; color: var(--ink-soft); }
+
+  /* 页脚：书的封底 */
+  footer { text-align: center; margin-top: 64px; color: var(--ink-soft); }
+  footer .stamp { font-family: var(--hand); font-size: 20px; color: var(--accent-1); border: 2px dashed var(--accent-1); border-radius: 8px; display: inline-block; padding: 6px 18px; transform: rotate(-2deg); }
+
+  @media (max-width: 640px) { h1 { font-size: 38px; } .page { padding: 24px 20px; } }
+</style>
+</head>
+<body>
+
+<!-- 活页环 -->
+<div class="rings" aria-hidden="true">
+  <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+  <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+</div>
+
+<main>
+  <!-- ===== 封面页 ===== -->
+  <header class="leaf" style="--tilt:-0.6deg; --delay:.05s; text-align:center; padding-top:8px;">
+    <h1>你好，我是<span class="hl">这里换名字</span></h1>
+    <svg class="wavy" viewBox="0 0 150 10" style="margin:0 auto;"><path d="M2 6 Q 14 1, 26 6 T 50 6 T 74 6 T 98 6 T 122 6 T 146 5"/></svg>
+    <p class="meta" style="margin-top:10px;">EST. 2026 · 记录一些小事</p>
+  </header>
+
+  <!-- ===== 内页 1：关于我 ===== -->
+  <section class="page leaf" style="--tilt:0.8deg; --delay:.15s;">
+    <div class="tape"></div>
+    <span class="sticker corner-tr" style="--tilt:2deg;">🌱</span>
+    <h2>关于我</h2>
+    <p>这里换成第一段自我介绍——两三行，短句，像手帐开头那一页的自我盘点。</p>
+    <p>再来一段：最近的近况、正在做的事、喜欢的东西。口语一点，自嘲一点。</p>
+    <span class="meta">written on a rainy tuesday</span>
+    <span class="sticker corner-bl" style="--tilt:-2.5deg;">✏️</span>
+  </section>
+
+  <!-- ===== 内页 2：正在做 ===== -->
+  <section class="page leaf" style="--tilt:-1.2deg; --delay:.25s;">
+    <div class="tape alt"></div>
+    <h2>最近在<span class="hl">做</span>的事</h2>
+    <ul>
+      <li>列表项一——一条一个具体的小事</li>
+      <li>列表项二</li>
+      <li>列表项三</li>
+    </ul>
+    <div style="display:flex; gap:32px; flex-wrap:wrap; margin-top:22px; justify-content:center;">
+      <figure class="polaroid" style="--tilt:-2deg;">
+        <div class="ph">📷</div>
+        <figcaption>拍立得：主题相关的一张图</figcaption>
+      </figure>
+      <div class="note" style="--tilt:1.8deg; align-self:center;">
+        便利贴：一句随手记的短句，带点情绪的那种。
+      </div>
+    </div>
+    <!-- 手绘箭头涂鸦：引导视线 -->
+    <svg class="doodle" style="right:28px; bottom:-26px; width:70px; height:40px;" viewBox="0 0 70 40"><path d="M4 6 C 24 4, 44 12, 58 28 M58 28 l-12 -3 M58 28 l2 -12"/></svg>
+  </section>
+
+  <!-- ===== 呼吸区 ===== -->
+  <div class="breath leaf" style="--delay:.35s;">
+    <svg width="46" height="46" viewBox="0 0 46 46" style="stroke:var(--ink); fill:none; stroke-width:2; stroke-linecap:round; transform:rotate(-8deg);"><path d="M23 5 L26 18 L39 20 L28 27 L31 40 L23 31 L14 39 L18 26 L7 21 L20 18 Z"/></svg>
+    <p>一句只属于这个角落的话。</p>
+  </div>
+
+  <!-- ===== 内页 3：按主题自行增减，3–6 个分区为宜 ===== -->
+
+  <!-- ===== 封底 ===== -->
+  <footer class="leaf" style="--delay:.45s;">
+    <div class="stamp">谢谢翻到这一页 ✿</div>
+    <p class="meta" style="margin-top:14px;">© 2026 · hand-bound with love</p>
+  </footer>
+</main>
+
+<script>
+  // 轻微动效已由 CSS 完成（进场 settle + hover 浮起）。如需逐元素随机微旋转，
+  // 可取消注释：让每个 .page 拿到一个 -2.5°~2.5° 的角度（相邻不同）。
+  // document.querySelectorAll('.page').forEach((el, i) => {
+  //   const t = (Math.sin(i * 2.7) * 2 + (i % 2 ? 0.6 : -0.6)).toFixed(2);
+  //   el.style.setProperty('--tilt', t + 'deg');
+  // });
+</script>
+</body>
+</html>
